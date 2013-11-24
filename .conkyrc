@@ -1,0 +1,181 @@
+#Alinha no meio a direita
+#alignment middle_right
+#Alinha abaixo a direita
+alignment bottom_right
+
+#Evita que fique colado na borda
+gap_x 15
+gap_y 15
+
+#Evita flickering
+double_buffer yes
+
+# Mudar para yes quando acabar de editar. Assim o processo fica em background
+background no
+
+#Faz o Conky funcionar na própria janela e com transparência
+own_window yes
+own_window_transparent yes
+own_window_argb_visual yes
+#own_window_argb_value 255
+own_window_type normal
+own_window_hints undecorated,below,sticky,skip_taskbar,skip_pager
+
+default_color white
+
+
+
+#Faz sombra nas letras
+#Muito elegante
+draw_shades yes
+default_shade_color black
+
+#draw_shades no
+#default_shade_color white
+
+#Desenha uma borda em volta das letras
+#Muito elegante com a fonte mono. Se não, não muito elegante
+#draw_outline yes
+#default_outline_color black
+draw_outline no
+default_outline_color white
+
+#Desenha uma borda em volta do Conky
+draw_borders no
+#border_width 1
+
+#Número de amostras retiradas do processador
+cpu_avg_samples 2
+
+#Número de amostras retiradas dos discos
+diskio_avg_samples 2
+
+#Número de amostras retirada dos dispositivos de rede
+net_avg_samples 2
+
+
+#Desenha uma borda em volta dos gráficos
+draw_graph_borders yes
+
+maximum_width 400
+
+#Usa outra fonte
+use_xft yes
+#xftfont DejaVu Sans Mono:size=12
+xftfont DejaVu Sans:size=12
+
+minimum_size 5 5
+
+out_to_console no
+out_to_stderr no
+extra_newline no
+
+#Comprimento dos traços do tracejado
+stippled_borders 5
+
+#Tempo de atualização
+update_interval 1.0
+
+#Todo texto em caixa alta
+uppercase no
+use_spacer none
+
+show_graph_scale no
+show_graph_range no
+
+
+TEXT
+#${scroll 32 $nodename - $sysname $kernel on $machine | }
+#$nodename Running $kernel Kernel
+#$hr
+#${color grey}Uptime:$color $uptime
+#${color grey}Frequency (in MHz):$color $freq
+#${color grey}Frequency (in GHz):$color $freq_g
+#${color grey}RAM Usage:$color $mem/$memmax - $memperc% ${membar 4}
+#${color grey}Swap Usage:$color $swap/$swapmax - $swapperc% ${swapbar 4}
+#${color grey}Total CPU Usage:$color ${cpu cpu0}% ${cpubar cpu0 4}
+#${color grey}CPU Core 1 Usage:$color ${cpu cpu1}% ${cpubar cpu1 4}
+#${color grey}CPU Core 2 Usage:$Color ${cpu cpu2}% ${cpubar cpu2 4}
+#${color grey}Processes:$color $processes  ${color grey}Running:$color $running_processes
+#$hr
+#${color grey}Disks Information:
+# / $color${fs_used /}/${fs_size /} ${fs_bar 6 /}
+# Colocar gráficos de uso
+#${diskiograph_write /dev/sda1 4,100 ffffff ff0000 1}
+#${diskiograph 10,50 000000 ff0000 -t}
+#${diskiograph sda 12,70 grey white 0 -t -l}
+#${diskiograph sda 12,70 3dba19 aecf4c 0 -t -l}
+#${color grey}Networking:
+#Up:$color ${upspeed eth0} ${color grey} - Down:$color ${downspeed eth0}
+#Um gráfico para as placas de rede
+\
+\
+${color white}Date: ${color grey}${time %a, %d %b %Y, %H:%M:%S} ${alignr}${color white}Uptime: ${color grey} ${uptime}
+${color white}$stippled_hr
+${color white}Linux Kernel: ${color grey}${kernel} on ${machine}
+#Barra com uso dos núcleos da CPU. Está boa. Talvez tenha que reduzir a largura se a barra ficar mais fina
+${color white}CPUs ${hr}
+${color white}CPU Frequency: ${color grey}${freq} MHz
+${color white}CPU1: ${color grey}${cpubar cpu1 7,100 ffa500 ffffff} ${alignr} ${color white}CPU2: ${color grey}${cpubar cpu2 7,100 ffa500 ffffff}
+${color white}${cpugraph 10,225 ffa500 ffffff -t -l}
+\
+RAM Memory ${hr}
+${color white}RAM used: ${color grey}${mem} ($memperc%)
+${color white}RAM Available: ${color grey}${memmax}
+\
+${color white}Temperatures ${hr}
+${color white}ACPI: ${color grey}$acpitemp ºC ${alignc}${color white}CPU: ${color grey}${hwmon temp 1} ºC ${alignr}${color white}HDD: ${color grey}${hddtemp /dev/sda} ºC
+#Dados da placa de vídeo. Só no note novo
+#${color1}Nvidia Gfx card ${hr}
+#${color0}GPU Frequency:${color8}${goto 110}${nvidia gpufreq} Mhz ${lua_parse gputemp temp}
+#${color0}Mem Frequency:${color8}${goto 110}${nvidia memfreq} Mhz${goto 165}${color0}Image quality:${color8}${alignr}${nvidia imagequality} 
+\
+#Não consigo fazer sumir quando as duas plcas de rede estão off
+#${if_match ${if_up eth0} != "" || ${if_up eth1} != ""}
+#${color white}Network ${color grey}($nodename) ${color white}${hr}
+#${endif}
+\
+${if_up eth0}\
+${color white}eth0: Down:${color grey} ${downspeed eth0}/s${color white}Up:${color grey} ${upspeed eth0}/s
+${color white}${downspeedgraph eth0 24,150 000000 91ec31} ${color white}${upspeedgraph eth0 24,150 000000 ec3131}
+${color white}Address: ${color grey}${addr eth0}${alignr}${color white}TCP Connections: ${color grey}${tcp_portmon 1 65535 count}
+${endif}
+\
+${if_up eth1}\
+${color white}eth1: Down:${color grey} ${downspeed eth1}/s${color white}Up:${color grey} ${upspeed eth1}/s
+${color white}${downspeedgraph eth1 24,150 000000 91ec31} ${color white}${upspeedgraph eth1 24,150 000000 ec3131}
+${color white}Address: ${color grey}${addr eth1}${alignr}${color white}TCP Connections: ${color grey}${tcp_portmon 1 65535 count}
+${endif}
+\
+${if_gw}\
+${color0}gateway: ${color}${gw_ip}
+${endif}\
+${alignr}${color0}dns: ${color}${nameserver}
+${voffset 3}${color1}File Systems ${color2}${hr}
+\
+\
+#${color white}Disk ${hr}
+#${color white}dev${alignr 350}Mount${alignr 165}write${alignr 122}read${alignr 90}temp
+#${color grey}/dev/sda${alignr 305}/${alignr 110}${color white}${diskio_write sda}${alignr 50}${color grey}${diskio_read sda}${alignr 20}${color white}${hddtemp /dev/sda} ${alignr 5}${color white}${diskiograph sda 12,70 3dba19 aecf4c 0 -t -l}
+\
+${voffset 3}${color1}Processes:${color} ${processes}  ${color1}Running:${color red1} ${running_processes} ${color2}${hr 1}
+${alignc}${color0}(top 5 sorted by CPU usage)
+${color white}NAME${alignr 110}PID${alignr 60}CPU%${alignr 20}MEM%
+${top name 1}${alignr 80}${top pid 1}${alignr 45}${top cpu 1}${alignr 20}${top mem 1}
+${top name 2}${alignr 80}${top pid 2}${alignr 45}${top cpu 2}${alignr 20}${top mem 2}
+${top name 3}${alignr 80}${top pid 3}${alignr 45}${top cpu 3}${alignr 20}${top mem 3}
+${top name 4}${alignr 80}${top pid 4}${alignr 45}${top cpu 4}${alignr 20}${top mem 4}
+${top name 5}${alignr 80}${top pid 5}${alignr 45}${top cpu 5}${alignr 20}${top mem 5}
+#${alignc}${color0}(top 3 sorted by MEM usage)
+#${color0}NAME${alignr 110}PID${alignr 60}CPU%${alignr 20}MEM%
+#${lua_parse top mem 1}${top_mem name 1}${alignr 80}${top_mem pid 1}${alignr 45}${top_mem cpu 1}${alignr 20}${top_mem mem 1}
+#${lua_parse top mem 2}${top_mem name 2}${alignr 80}${top_mem pid 2}${alignr 45}${top_mem cpu 2}${alignr 20}${top_mem mem 2}
+#${lua_parse top mem 3}${top_mem name 3}${alignr 80}${top_mem pid 3}${alignr 45}${top_mem cpu 3}${alignr 20}${top_mem mem 3}
+\
+#${color white}Processes $hr
+#${color grey}Name              PID   CPU%   MEM%
+#${color lightgrey} ${top name 1} ${top pid 1} ${top cpu 1} ${top mem 1}
+#${color lightgrey} ${top name 2} ${top pid 2} ${top cpu 2} ${top mem 2}
+#${color lightgrey} ${top name 3} ${top pid 3} ${top cpu 3} ${top mem 3}
+#${color lightgrey} ${top name 4} ${top pid 4} ${top cpu 4} ${top mem 4}
+#${color lightgrey} ${top name 5} ${top pid 5} ${top cpu 5} ${top mem 5}
